@@ -1,0 +1,107 @@
+# Writing a word counting class and making a wordle
+
+import wordle
+import string
+
+class Count:
+        #
+        # Count constructor
+        #
+        # the __init__ method initializes the variables (attributes)
+        # in Count objects, such as the dictionary datastructure that
+        # hold the counts for each word. It is called when the count
+        # object is first created using Count().
+        #
+        # The variable self refers to the object being initialized
+        # So self.word_counts is referring to the word_count dictionay
+        # within the object.
+        #
+        # Always add self in front of word_counts to access it within a method.
+        def __init__(self):
+                # Initialize word_counts to an empty dictionary
+                self.stop_words = []
+                infile = open('stop_words.txt', 'r')
+                for line in infile:
+                        linewords = line.split()
+                        for words in linewords:
+                                self.stop_words.append(words)
+
+                print('Word Counter Initialized')
+                self.word_counts = {}
+                
+        # The get_num_words method returns the number of words
+        # (keys) in the word_counts dictionary.
+        # This counts each word only once.
+        def get_num_words(self):
+                self = len(self.word_counts)
+                return self
+
+        # The increment_count method increments the count of a word. 
+        # If word is not yet in the dictionary, self.word_counts,
+        # it is added with a count of 1. If word is in the dictionary,
+        # its count is incremented by 1.
+        def increment_count(self,word):
+                word = word.lower()
+                word = word.strip(string.punctuation)
+                if word == '':
+                        return
+                if word in self.word_counts and word not in self.stop_words:
+                        self.word_counts[word] = self.word_counts[word] + 1
+                        self = self.word_counts
+                        
+                elif word not in self.stop_words:
+                        self.word_counts[word] = 1
+                        self = self.word_counts
+                return self
+
+        # The lookup_count method returns the count of word
+        # from the self.word_counts dictionary. If the word
+        # is not in the dictionary, it returns 0.
+        def lookup_count(self,word):
+                if word in self.word_counts:
+                        self = self.word_counts[word]
+                else:
+                        self = 0
+                return self
+
+        # The get_top_words method gets the words with the highest
+        # counts out of the dictionary.
+        #
+        # The parameter num indicates how many words to return.
+        #
+        # The method returns a list of num (count,word) tuples
+        # sorted from higest to lowest.
+        def get_top_words(self,num):
+                order = []
+                for word, word_num in self.word_counts.items():
+                        order.append((word_num, word))
+                order.sort(reverse=True)
+                return order[0:num]
+        
+# The main program 
+def main():
+                                
+        ## Make a new Count object 
+        ## the counter object will keep track of
+        ## the counts for all the words in the book
+        counter = Count()
+
+        ## Open the user specified book file
+        
+        filename = input("Enter book file:")
+        infile = open(filename)
+        for line in infile: 
+                linewords = line.split()
+                for words in range(len(linewords)):
+                        counter.increment_count(linewords[words])
+
+        
+        print("Top 10 Words:")
+        top_ten = counter.get_top_words(10)
+        print(top_ten)
+
+        print("Unique words:", counter.get_num_words())
+        wordle.wordleFromObject(counter,30)
+
+# Call the main program
+main()
